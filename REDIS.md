@@ -190,7 +190,92 @@ Further references - https://redis.io/topics/persistence
 
 ## Cluster
 
-- Redis consists of 16863 hash slots
-- We can have 16864 nodes in a cluster. However, it is recommended to have ~1000 
+- Redis consists of 0 - 16383 hash slots
+- We can have 16384 nodes in a cluster. However, it is recommended to have ~1000 
 - You should have minimum of 3 masters. During the failure detection, the majority of the master nodes are required to come to an agreement. If there are only 2 masters, say A and B and B failed, then the A master node cannot reach to a decision according to the protocol. The A node needs another third node, say C, to tell A that it also cannot reach B.
-  ![](images/redis-cluster.png)
+![](images/redis-cluster.png)
+- Create a Redis cluster
+
+    ```shell script
+    <path-to-redis-installation>/utils/create-cluster/create-cluster start
+  
+    Starting 30001
+    Starting 30002
+    Starting 30003
+    Starting 30004
+    Starting 30005
+    Starting 30006
+    ```
+  
+    ```shell script
+    <path-to-redis-installation>/utils/create-cluster/create-cluster create
+    
+    >>> Performing hash slots allocation on 6 nodes...
+    Master[0] -> Slots 0 - 5460
+    Master[1] -> Slots 5461 - 10922
+    Master[2] -> Slots 10923 - 16383
+    Adding replica 127.0.0.1:30005 to 127.0.0.1:30001
+    Adding replica 127.0.0.1:30006 to 127.0.0.1:30002
+    Adding replica 127.0.0.1:30004 to 127.0.0.1:30003
+    >>> Trying to optimize slaves allocation for anti-affinity
+    [WARNING] Some slaves are in the same host as their master
+    M: a5d49d74ca31fed0970389612a2fbcf229eb5d0c 127.0.0.1:30001
+       slots:[0-5460] (5461 slots) master
+    M: 6bc2f9a8ce4c46370023b2c38084b770d4c7afde 127.0.0.1:30002
+       slots:[5461-10922] (5462 slots) master
+    M: 928e1e3c6095203ff9089686d121015bc8db5661 127.0.0.1:30003
+       slots:[10923-16383] (5461 slots) master
+    S: c92335a6cfbb416cf29047996554f8a091ed1612 127.0.0.1:30004
+       replicates 6bc2f9a8ce4c46370023b2c38084b770d4c7afde
+    S: 2a42b16aa2f922f8c40fc62e870ea39797ebe123 127.0.0.1:30005
+       replicates 928e1e3c6095203ff9089686d121015bc8db5661
+    S: 98accb1d54ed53087231ae92b3c9c063534f2e22 127.0.0.1:30006
+       replicates a5d49d74ca31fed0970389612a2fbcf229eb5d0c
+    Can I set the above configuration? (type 'yes' to accept): yes
+    >>> Nodes configuration updated
+    >>> Assign a different config epoch to each node
+    >>> Sending CLUSTER MEET messages to join the cluster
+    Waiting for the cluster to join
+    .
+    >>> Performing Cluster Check (using node 127.0.0.1:30001)
+    M: a5d49d74ca31fed0970389612a2fbcf229eb5d0c 127.0.0.1:30001
+       slots:[0-5460] (5461 slots) master
+       1 additional replica(s)
+    S: 98accb1d54ed53087231ae92b3c9c063534f2e22 127.0.0.1:30006
+       slots: (0 slots) slave
+       replicates a5d49d74ca31fed0970389612a2fbcf229eb5d0c
+    S: 2a42b16aa2f922f8c40fc62e870ea39797ebe123 127.0.0.1:30005
+       slots: (0 slots) slave
+       replicates 928e1e3c6095203ff9089686d121015bc8db5661
+    S: c92335a6cfbb416cf29047996554f8a091ed1612 127.0.0.1:30004
+       slots: (0 slots) slave
+       replicates 6bc2f9a8ce4c46370023b2c38084b770d4c7afde
+    M: 6bc2f9a8ce4c46370023b2c38084b770d4c7afde 127.0.0.1:30002
+       slots:[5461-10922] (5462 slots) master
+       1 additional replica(s)
+    M: 928e1e3c6095203ff9089686d121015bc8db5661 127.0.0.1:30003
+       slots:[10923-16383] (5461 slots) master
+       1 additional replica(s)
+    [OK] All nodes agree about slots configuration.
+    >>> Check for open slots...
+    >>> Check slots coverage...
+    [OK] All 16384 slots covered.
+    ```    
+
+    This gives us 3 masters 
+    
+    ```
+    127.0.0.1:30001
+    127.0.0.1:30002
+    127.0.0.1:30003
+    ```
+    
+    and, 3 slaves
+    
+    ```
+    127.0.0.1:30005 to 127.0.0.1:30001
+    127.0.0.1:30006 to 127.0.0.1:30002
+    127.0.0.1:30004 to 127.0.0.1:30003
+    ```
+
+- 
