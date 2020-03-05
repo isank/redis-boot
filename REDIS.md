@@ -1,5 +1,11 @@
 # Redis
 
+- [Download &amp; Install](#download--install)
+- [Data Types](#data-types)
+- [Configuration](#configuration)
+- [Persistence](#persistence)
+- [Cluster](#cluster)
+
 ## Download & Install
 
 https://redis.io/download
@@ -180,10 +186,11 @@ https://redis.io/download
         appendfsync everysec
         ```
 
-further references - https://redis.io/topics/persistence
+Further references - https://redis.io/topics/persistence
 
 ## Cluster
 
 - Redis consists of 16863 hash slots
 - We can have 16864 nodes in a cluster. However, it is recommended to have ~1000 
-- It is recommended to 
+- You should have minimum of 3 masters. During the failure detection, the majority of the master nodes are required to come to an agreement. If there are only 2 masters, say A and B and B failed, then the A master node cannot reach to a decision according to the protocol. The A node needs another third node, say C, to tell A that it also cannot reach B.
+
