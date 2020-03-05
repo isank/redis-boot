@@ -17,7 +17,7 @@ A sample application with Spring Boot &amp; Redis
 3. from the project root execute
 
     ```shell script
-    ./gardlew bootRun
+    ./gradlew bootRun
     ```
    to run this application
 4. You can also open the project in your favourite IDE 
