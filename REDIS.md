@@ -2,6 +2,7 @@
 
 - [Download &amp; Install](#download--install)
 - [Data Types](#data-types)
+- [Transactions](#transactions)
 - [Configuration](#configuration)
 - [Persistence](#persistence)
 - [Cluster](#cluster)
@@ -104,6 +105,25 @@ https://redis.io/download
         5) "address"
         6) "CA"
         ```
+      
+## Transactions
+
+- transactions are all about queuing multiple commands together and execute them all at once
+- examples
+    
+    ```shell script
+    MULTI
+    OK
+    INCR number
+    INCR number
+    INCR number
+    DECR number
+    EXEC
+    1) (integer) 1
+    2) (integer) 2
+    3) (integer) 3
+    4) (integer) 2
+    ```
 
 ## Configuration
 - by default redis picks up the configuration from `redis.conf` present in the redis installations root folder
