@@ -5,6 +5,7 @@
 - [Configuration](#configuration)
 - [Persistence](#persistence)
 - [Cluster](#cluster)
+- [Sharding](#sharding)
 
 ## Download & Install
 
@@ -278,4 +279,26 @@ Further references - https://redis.io/topics/persistence
     127.0.0.1:30004 to 127.0.0.1:30003
     ```
 
-- 
+## Sharding
+  
+  - A redis cluster is a simple data sharding strategy.
+  - It automatically partitions data across multiple Redis nodes.
+  - Every key is mapped to a particular hash slot with the help of
+  a distributed algorithm
+  
+    ```
+    HASH_SLOT = CRC16(key) mod HASH_SLOTS_NUMBER
+    ```   
+    
+    for eg:
+    
+    ```
+    slot = CRC16(“name”) % 16384
+    ```
+    
+    ```shell script
+    127.0.0.1:30001> SET name "john"
+    -> Redirected to slot [5798] located at 127.0.0.1:30002
+    OK
+    127.0.0.1:30002>
+    ```
