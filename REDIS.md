@@ -124,6 +124,17 @@ https://redis.io/download
     3) (integer) 3
     4) (integer) 2
     ```
+    
+    ```shell script
+    MULTI
+    OK
+    INCR number
+    INCR number
+    INCR number
+    DECR number
+    DISCARD
+    OK
+    ```
 
 ## Configuration
 - by default redis picks up the configuration from `redis.conf` present in the redis installations root folder
